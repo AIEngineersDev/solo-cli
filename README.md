@@ -18,7 +18,7 @@ You can download and install Solo CLI using the following commands:
 
 ```sh
 # Clone the repository
-git clone https://github.com/yourusername/solo-cli.git
+git clone https://github.com/AIEngineersDev/solo-cli.git
 
 # Navigate to the directory
 cd solo-cli
