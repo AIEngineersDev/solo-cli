@@ -1,84 +1,74 @@
 # Solo CLI
 
-**Portable, Powerful, and Private AI Hub through a Versatile CLI**
+A CLI tool to manage and execute LLaMA files.
 
-## Summary
+## 🌟 Features
 
-Solo CLI is a command-line tool designed to provide a portable, powerful, and private AI hub. It allows users to set up, manage, and deploy AI models seamlessly on their local machines. With Solo CLI, you can harness the power of AI anywhere, anytime, without compromising on privacy or performance.
+- Initialize and download models
+- Pull specific models by name
+- Quickstart to execute a default model
+- Serve models on the internet using ngrok
+- Start models with specific configurations
 
-## Demo
+## 🚀 Getting Started
 
-![Solo CLI Demo]()
+### Prerequisites
 
-## Download
+- Python 3.7 or higher
+- Pip (Python package installer)
+- ngrok account (optional, for serving models)
 
 ### Installation
 
-You can download and install Solo CLI using the following commands:
+Install the package using pip:
 
-```sh
-# Clone the repository
-git clone https://github.com/AIEngineersDev/solo-cli.git
-
-# Navigate to the directory
-cd solo-cli
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Install Solo CLI
-python setup.py install
+```bash
+pip install solo-cli
 ```
 
-## Quicklinks
+### Usage
 
-- [Documentation]()
-- [Report Issues](https://github.com/AIEngineersDev/solo-cli/issues)
-- [Contributing Guide]()
-- [Changelog]()
+```bash
+solo-cli init
+solo-cli pull model_name
+solo-cli quickstart
+solo-cli serve --port 8080
+solo-cli start model_name --port 8080
+```
 
-## Troubleshooting
+## 📖 Examples
 
-### Common Issues
+### Initialize
+```bash
+solo-cli init
+```
+### Pull a Model
+```bash
+solo-cli pull llava-v1.5-7b-q4
+```
+### Quickstart
+```bash
+solo-cli quickstart
+```
+### Serve a Model
+```bash
+solo-cli serve --port 8080
+```
+### Start a Model
+```bash
+solo-cli start llava-v1.5-7b-q4 --port 8080
+```
 
-#### Installation Issues
+## 📦 Dependencies
+Typer
+Requests
+tqdm
+ngrok
 
-- **Problem:** Unable to install dependencies.
-  - **Solution:** Ensure you have Python 3.8 or higher installed. Run `python --version` to check your Python version.
+## 🗺️ Roadmap
+Add support for more models
+Improve error handling
+Add more configuration options
 
-#### Running Issues
-
-- **Problem:** Solo CLI commands not recognized.
-  - **Solution:** Make sure the installation path is added to your system's PATH environment variable.
-
-### Contact Support
-
-If you encounter any issues not listed above, please open an issue on our [GitHub Issues page](https://github.com/AIEngineersDev/solo-cli/issues).
-
-## Requirements
-
-- Python 3.8 or higher
-- pip (Python package installer)
-- Git
-
-## Contributing
-
-We welcome contributions from the community! To contribute, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch for your feature or bugfix.
-3. Commit your changes and push your branch to your fork.
-4. Submit a pull request with a detailed description of your changes.
-
-For more details, please read our [Contributing Guide]().
-
-## Acknowledgements
-
-We would like to thank the following projects and individuals for their contributions:
-
-- [Llamafile](https://github.com/Mozilla-Ocho/llamafile) - For their foundational work.
-- [Typer](https://typer.tiangolo.com/) - For the CLI framework.
-
-## License
-
-Solo CLI is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+## 🤝 Contribution
+Contributions are welcome! Please open an issue or submit a pull request on GitHub.
