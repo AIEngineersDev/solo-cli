@@ -1,6 +1,7 @@
 import typer
 from solo_cli.utils import download_file, set_permissions, start_ngrok_service, start_model
 import subprocess
+import requests
 
 app = typer.Typer()
 
@@ -18,6 +19,22 @@ models = {
     "e5-mistral-7b-instruct-Q5_K_M": "https://huggingface.co/somepath/e5-mistral-7b-instruct-Q5_K_M.llamafile?download=true",
     "mxbai-embed-large-v1-f16": "https://huggingface.co/somepath/mxbai-embed-large-v1-f16.llamafile?download=true"
 }
+
+API_BASE_URL = "https://huggingface.co/Mozilla/Phi-3-mini-4k-instruct-llamafile"
+
+@app.command()
+def list_models():
+    """
+    List available models from the Hugging Face repository.
+    """
+    response = requests.get(API_BASE_URL)
+    if response.status_code == 200:
+        models = response.json()
+        typer.echo("Available Models:")
+        for model in models:
+            typer.echo(f"- {model['modelId']}")
+    else:
+        typer.echo("Failed to fetch models", err=True)
 
 @app.command()
 def init():
