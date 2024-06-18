@@ -1,26 +1,13 @@
 import typer
-from solo_cli.utils import download_file, set_permissions, start_ngrok_service, start_model
 import subprocess
 import requests
 
+from solo_cli.utils import download_file, set_permissions, start_ngrok_service, start_model,\
+    check_node_installed, install_node, clone_repo, run_npm_install, run_docker_mongodb, prompt_huggingface_token,\
+    create_env_file, load_config, update_config, run_solo_chat_ui
+from solo_cli.constants import API_BASE_URL, models, DEFAULT_MODEL
+
 app = typer.Typer()
-
-models = {
-    "llava-v1.5-7b-q4": "https://huggingface.co/Mozilla/llava-v1.5-7b-llamafile/resolve/main/llava-v1.5-7b-q4.llamafile?download=true",
-    "TinyLlama-1.1B-Chat-v1.0.F16": "https://huggingface.co/somepath/TinyLlama-1.1B-Chat-v1.0.F16.llamafile?download=true",
-    "mistral-7b-instruct-v0.2.Q4_0": "https://huggingface.co/somepath/mistral-7b-instruct-v0.2.Q4_0.llamafile?download=true",
-    "Phi-3-mini-4k-instruct.F16": "https://huggingface.co/somepath/Phi-3-mini-4k-instruct.F16.llamafile?download=true",
-    "mixtral-8x7b-instruct-v0.1.Q5_K_M": "https://huggingface.co/somepath/mixtral-8x7b-instruct-v0.1.Q5_K_M.llamafile?download=true",
-    "wizardcoder-python-34b-v1.0.Q5_K_M": "https://huggingface.co/somepath/wizardcoder-python-34b-v1.0.Q5_K_M.llamafile?download=true",
-    "wizardcoder-python-13b": "https://huggingface.co/somepath/wizardcoder-python-13b.llamafile?download=true",
-    "Meta-Llama-3-70B-Instruct.Q4_0": "https://huggingface.co/somepath/Meta-Llama-3-70B-Instruct.Q4_0.llamafile?download=true",
-    "Meta-Llama-3-8B-Instruct.Q5_K_M": "https://huggingface.co/somepath/Meta-Llama-3-8B-Instruct.Q5_K_M.llamafile?download=true",
-    "rocket-3b.Q5_K_M": "https://huggingface.co/somepath/rocket-3b.Q5_K_M.llamafile?download=true",
-    "e5-mistral-7b-instruct-Q5_K_M": "https://huggingface.co/somepath/e5-mistral-7b-instruct-Q5_K_M.llamafile?download=true",
-    "mxbai-embed-large-v1-f16": "https://huggingface.co/somepath/mxbai-embed-large-v1-f16.llamafile?download=true"
-}
-
-API_BASE_URL = "https://huggingface.co/Mozilla/Phi-3-mini-4k-instruct-llamafile"
 
 @app.command()
 def list_models():
@@ -38,11 +25,13 @@ def list_models():
 
 @app.command()
 def init():
-    url = models["llava-v1.5-7b-q4"]
-    filename = 'llava-v1.5-7b-q4.llamafile'
-    
+    url = models[DEFAULT_MODEL]
+    filename = f"{DEFAULT_MODEL}.llamafile"
+
     download_file(url, filename)
     set_permissions(filename)
+    update_config('model_name', DEFAULT_MODEL)
+
 
 @app.command()
 def pull(model_name: str):
@@ -56,7 +45,8 @@ def pull(model_name: str):
 
 @app.command()
 def quickstart():
-    llamafile = 'llava-v1.5-7b-q4.llamafile'
+    config = load_config()
+    llamafile = f"{config.get('model_name', DEFAULT_MODEL)}.llamafile"
     shell_script = f"{llamafile}.sh"
 
     with open(shell_script, 'w') as f:
@@ -75,15 +65,36 @@ def start(model_name: str, port: int):
     if model_name in models:
         filename = f"{model_name}.llamafile"
         shell_script = f"{filename}.sh"
-        
+
+        update_config('model_name', model_name)
+
         with open(shell_script, 'w') as f:
             f.write(f"#!/bin/bash\n./{filename}")
 
         set_permissions(shell_script)
-        
+
         subprocess.run(['./' + shell_script], check=True)
     else:
         print(f"Model {model_name} not found. Please provide a valid model name.")
+
+
+@app.command()
+def initapp():
+    if not check_node_installed():
+        install_node()
+    else:
+        print("Node.js is already installed.")
+
+    clone_repo()
+    run_npm_install()
+    run_docker_mongodb()
+
+    # Prompt the user for Hugging Face token
+    prompt_huggingface_token()
+    init()
+    create_env_file()
+    run_solo_chat_ui()
+
 
 if __name__ == "__main__":
     app()
