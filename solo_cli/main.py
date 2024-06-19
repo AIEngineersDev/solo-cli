@@ -3,10 +3,11 @@ import subprocess
 import requests
 import concurrent.futures
 
-from solo_cli.utils import download_file, set_permissions, start_ngrok_service, start_model,\
-    check_node_installed, install_node, clone_repo, run_npm_install, run_docker_mongodb, prompt_huggingface_token,\
-    create_env_file, load_config, update_config, run_solo_chat_ui
+from solo_cli.utils.llama_server import download_file, set_permissions, start_ngrok_service, start_model
 from solo_cli.constants import API_BASE_URL, MODELS, DEFAULT_MODEL
+from solo_cli.config import load_config, update_config
+from solo_cli.utils.chat_ui import check_node_installed, install_node, clone_repo, run_npm_install,\
+    run_docker_mongodb, prompt_huggingface_token, create_env_file, run_solo_chat_ui
 
 app = typer.Typer()
 
