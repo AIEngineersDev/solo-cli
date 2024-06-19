@@ -91,7 +91,14 @@ def initapp():
 
     # Prompt the user for Hugging Face token
     prompt_huggingface_token()
-    init()
+
+    # get selected model
+    config = load_config()
+    # incase no model selected initiate default model download
+    if not config.get('model_name'):
+        init()
+
+    # create env file for chat ui
     create_env_file()
     run_solo_chat_ui()
 
