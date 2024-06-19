@@ -4,6 +4,7 @@ import requests
 import subprocess
 from tqdm import tqdm
 
+
 def download_file(url, filename):
     if os.path.exists(filename):
         print(f"{filename} already exists. Skipping download.")
@@ -72,3 +73,4 @@ def start_ngrok_service(port):
 def start_model():
     # Placeholder for start model functionality
     print("Starting model...")
+

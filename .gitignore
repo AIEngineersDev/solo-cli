@@ -1,0 +1,7 @@
+venv/
+build
+/config
+/solo_cli.egg-info
+solo-chat-ui
+*.llama*
+llama.*
