@@ -100,7 +100,16 @@ def initapp():
 
     # create env file for chat ui
     create_env_file()
-    run_solo_chat_ui()
+
+    # Run solo_chat_ui and model server start in parallel
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future_run_solo_chat_ui = executor.submit(run_solo_chat_ui)
+        future_quickstart = executor.submit(quickstart)
+
+        # Wait for both to complete
+        concurrent.futures.wait([future_run_solo_chat_ui, future_quickstart])
+
+    print("Both servers have been started.")
 
 
 if __name__ == "__main__":
