@@ -47,6 +47,8 @@ def pull(model_name: str):
 
 @app.command()
 def quickstart():
+    print("running quickstart...")
+
     config = load_config()
     llamafile = f"{config.get('model_name', DEFAULT_MODEL)}.llamafile"
     shell_script = f"{llamafile}.sh"
@@ -56,6 +58,7 @@ def quickstart():
 
     set_permissions(shell_script)
 
+    print("starting llama server...")
     subprocess.run(['./' + shell_script], check=True)
 
 @app.command()
@@ -87,8 +90,11 @@ def initapp():
     else:
         print("Node.js is already installed.")
 
+    # chat ui repo
     clone_repo()
+    # install dependencies in chat ui
     run_npm_install()
+    # run db instance for chat storage
     run_docker_mongodb()
 
     # Prompt the user for Hugging Face token
