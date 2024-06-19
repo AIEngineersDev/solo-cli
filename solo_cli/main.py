@@ -51,7 +51,7 @@ def quickstart():
     shell_script = f"{llamafile}.sh"
 
     with open(shell_script, 'w') as f:
-        f.write(f"#!/bin/bash\n./{llamafile}")
+        f.write(f"#!/bin/bash\n./{llamafile} --nobrowser")
 
     set_permissions(shell_script)
 
