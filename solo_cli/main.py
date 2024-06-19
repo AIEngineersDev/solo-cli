@@ -1,6 +1,7 @@
 import typer
 import subprocess
 import requests
+import concurrent.futures
 
 from solo_cli.utils import download_file, set_permissions, start_ngrok_service, start_model,\
     check_node_installed, install_node, clone_repo, run_npm_install, run_docker_mongodb, prompt_huggingface_token,\
