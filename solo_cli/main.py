@@ -6,7 +6,7 @@ import concurrent.futures
 from solo_cli.utils import download_file, set_permissions, start_ngrok_service, start_model,\
     check_node_installed, install_node, clone_repo, run_npm_install, run_docker_mongodb, prompt_huggingface_token,\
     create_env_file, load_config, update_config, run_solo_chat_ui
-from solo_cli.constants import API_BASE_URL, models, DEFAULT_MODEL
+from solo_cli.constants import API_BASE_URL, MODELS, DEFAULT_MODEL
 
 app = typer.Typer()
 
@@ -26,7 +26,7 @@ def list_models():
 
 @app.command()
 def init():
-    url = models[DEFAULT_MODEL]
+    url = MODELS[DEFAULT_MODEL]
     filename = f"{DEFAULT_MODEL}.llamafile"
 
     download_file(url, filename)
@@ -36,8 +36,8 @@ def init():
 
 @app.command()
 def pull(model_name: str):
-    if model_name in models:
-        url = models[model_name]
+    if model_name in MODELS:
+        url = MODELS[model_name]
         filename = f"{model_name}.llamafile"
         download_file(url, filename)
         set_permissions(filename)
@@ -63,7 +63,7 @@ def serve(port: int = 8080):
 
 @app.command()
 def start(model_name: str, port: int):
-    if model_name in models:
+    if model_name in MODELS:
         filename = f"{model_name}.llamafile"
         shell_script = f"{filename}.sh"
 

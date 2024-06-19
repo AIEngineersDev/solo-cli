@@ -1,6 +1,6 @@
 API_BASE_URL = "https://huggingface.co/Mozilla/Phi-3-mini-4k-instruct-llamafile"
 
-models = {
+MODELS = {
     "llava-v1.5-7b-q4": "https://huggingface.co/Mozilla/llava-v1.5-7b-llamafile/resolve/main/llava-v1.5-7b-q4.llamafile?download=true",
     "TinyLlama-1.1B-Chat-v1.0.F16": "https://huggingface.co/somepath/TinyLlama-1.1B-Chat-v1.0.F16.llamafile?download=true",
     "mistral-7b-instruct-v0.2.Q4_0": "https://huggingface.co/somepath/mistral-7b-instruct-v0.2.Q4_0.llamafile?download=true",
