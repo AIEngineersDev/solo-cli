@@ -70,7 +70,8 @@ def run_solo_chat_ui(repo_dir="solo-chat-ui"):
     # Run npm run dev in the cloned repository
     print(f"Running `npm run dev` on {repo_dir}...")
     try:
-        subprocess.run(['npm', 'run', 'dev'], cwd=repo_dir, check=True)
+        root_path = load_config().get('dir', './')
+        subprocess.run(['npm', 'run', 'dev'], cwd=os.path.join(root_path, repo_dir), check=True)
     except subprocess.CalledProcessError as e:
         print(f"Running `npm run dev` on {repo_dir}, error: {e}")
 

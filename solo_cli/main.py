@@ -2,6 +2,7 @@ import typer
 import subprocess
 import requests
 import concurrent.futures
+import os
 
 from solo_cli.utils.llama_server import download_file, set_permissions, start_ngrok_service, start_model
 from solo_cli.constants import API_BASE_URL, MODELS, DEFAULT_MODEL
@@ -53,8 +54,11 @@ def quickstart():
     llamafile = f"{config.get('model_name', DEFAULT_MODEL)}.llamafile"
     shell_script = f"{llamafile}.sh"
 
+    root_path = config.get('dir', './')
+    llamafile_path = os.path.join(root_path, llamafile)
+
     with open(shell_script, 'w') as f:
-        f.write(f"#!/bin/bash\n./{llamafile} --nobrowser")
+        f.write(f"#!/bin/bash\n{llamafile_path} --nobrowser")
 
     set_permissions(shell_script)
 
@@ -82,13 +86,15 @@ def start(model_name: str, port: int):
     else:
         print(f"Model {model_name} not found. Please provide a valid model name.")
 
-
 @app.command()
-def initapp():
+def initapp(dir: str = './'):
     if not check_node_installed():
         install_node()
     else:
         print("Node.js is already installed.")
+
+    if os.path.exists(dir):
+        update_config('dir', dir)
 
     # chat ui repo
     clone_repo()
