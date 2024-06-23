@@ -68,12 +68,22 @@ def run_solo_chat_ui(repo_dir="solo-chat-ui"):
         Run npm dev in the solo chat ui directory.
     """
     # Run npm run dev in the cloned repository
-    print(f"Running `npm run dev` on {repo_dir}...")
     try:
+        # Kill the previous process if running
+        print("Checking for running processes...")
+        result = subprocess.run(['pgrep', '-f', 'solo-chat-ui/node_modules/.bin/vite'], check=True)
+        if result.stdout:
+            pids = result.stdout.strip().split('\n')
+            for pid in pids:
+                print(f"Killing process with PID {pid}")
+                subprocess.run(['kill', '-9', pid], check=True)
+
         root_path = load_config().get('dir', './')
-        subprocess.run(['npm', 'run', 'dev'], cwd=os.path.join(root_path, repo_dir), check=True)
+        dir_path = os.path.join(root_path, repo_dir)
+        print(f"Running `npm run dev` on {dir_path}...")
+        subprocess.run(['npm', 'run', 'dev'], cwd=dir_path, check=True)
     except subprocess.CalledProcessError as e:
-        print(f"Running `npm run dev` on {repo_dir}, error: {e}")
+        print(f"Running `npm run dev` on {dir_path}, error: {e}")
 
 def start_docker_daemon():
     import time
@@ -95,9 +105,21 @@ def run_docker_mongodb(repo_dir="solo-chat-ui"):
     start_docker_daemon()
     print("Starting MongoDB Docker container...")
     try:
-        subprocess.run(['docker', 'run', '-d', '-p', '27017:27017', '--name', 'mongo-chatui', 'mongo:latest'], cwd=repo_dir, check=True)
+        # Check if the container is already running
+        result = subprocess.run(['docker', 'inspect', '--format', '{{.State.Running}}', 'mongo-chatui'], check=True)
+        if result.stdout.strip() == 'true':
+            print("MongoDB Docker container is already running.")
+        else:
+            print("MongoDB Docker container is not running. Starting it...")
+            subprocess.run(['docker', 'start', 'mongo-chatui'], check=True)
+
     except subprocess.CalledProcessError as e:
-        print(f"Failed to run MongoDB Docker container: {e}")
+        # If the container doesn't exist, create and run it
+        print("MongoDB Docker container not found. Creating and starting it...")
+        try:
+            subprocess.run(['docker', 'run', '-d', '-p', '27017:27017', '--name', 'mongo-chatui', 'mongo:latest'], cwd=repo_dir, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to run MongoDB Docker container: {e}")
 
 
 def prompt_huggingface_token():

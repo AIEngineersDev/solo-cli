@@ -74,3 +74,23 @@ def start_model():
     # Placeholder for start model functionality
     print("Starting model...")
 
+def is_server_running(url = "http://localhost:8080"):
+    try:
+        response = requests.get(url)
+        return response.status_code == 200
+    except requests.ConnectionError:
+        return False
+
+def kill_process_on_port(port):
+    try:
+        result = subprocess.run(['lsof', '-ti', f':{port}', '-sTCP:LISTEN'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        if result.stdout.strip():
+            pid = result.stdout.strip()
+            subprocess.run(['kill', pid], check=True)
+            print(f"Killed process with PID {pid} listening on port {port}")
+        else:
+            print(f"No process found listening on port {port}")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to kill process on port {port}: {e}")
+    return True
+

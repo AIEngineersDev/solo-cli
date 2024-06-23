@@ -4,7 +4,8 @@ import requests
 import concurrent.futures
 import os
 
-from solo_cli.utils.llama_server import download_file, set_permissions, start_ngrok_service, start_model
+from solo_cli.utils.llama_server import download_file, set_permissions, start_ngrok_service, is_server_running,\
+    kill_process_on_port
 from solo_cli.constants import API_BASE_URL, MODELS, DEFAULT_MODEL
 from solo_cli.config import load_config, update_config
 from solo_cli.utils.chat_ui import check_node_installed, install_node, clone_repo, run_npm_install,\
@@ -47,23 +48,32 @@ def pull(model_name: str):
         print(f"Model {model_name} not found. Please provide a valid model name.")
 
 @app.command()
-def quickstart():
+def quickstart(restart: bool = typer.Option(False, '--restart', help='Force restart the server even if it is already running.')):
     print("running quickstart...")
 
-    config = load_config()
-    llamafile = f"{config.get('model_name', DEFAULT_MODEL)}.llamafile"
-    shell_script = f"{llamafile}.sh"
+    if not restart and is_server_running():
+        # Kill existing process on port 8080
+        typer.echo("Llama server is already running.")
+    else:
+        kill_process_on_port(8080)
+        config = load_config()
+        llamafile = f"{config.get('model_name', DEFAULT_MODEL)}.llamafile"
+        shell_script = f"{llamafile}.sh"
 
-    root_path = config.get('dir', './')
-    llamafile_path = os.path.join(root_path, llamafile)
+        root_path = config.get('dir', './')
+        llamafile_path = os.path.join(root_path, llamafile)
 
-    with open(shell_script, 'w') as f:
-        f.write(f"#!/bin/bash\n{llamafile_path} --nobrowser")
+        with open(shell_script, 'w') as f:
+            f.write(f"#!/bin/bash\n{llamafile_path} --nobrowser")
 
-    set_permissions(shell_script)
+        permitted_file = set_permissions(shell_script)
+        file_permissions = config.get('file_permissions', {})
+        # file_permissions={}
+        file_permissions[permitted_file] = True
+        update_config('file_permissions', file_permissions)
 
-    print("starting llama server...")
-    subprocess.run(['./' + shell_script], check=True)
+        typer.echo("starting llama server...")
+        subprocess.run(['./' + shell_script], check=True)
 
 @app.command()
 def serve(port: int = 8080):
@@ -109,7 +119,10 @@ def initapp(dir: str = './'):
     # get selected model
     config = load_config()
     # incase no model selected initiate default model download
-    if not config.get('model_name'):
+
+    file_permissions = config.get('file_permissions', {})
+
+    if not file_permissions.get(config.get('model_name', DEFAULT_MODEL), False):
         init()
 
     # create env file for chat ui
