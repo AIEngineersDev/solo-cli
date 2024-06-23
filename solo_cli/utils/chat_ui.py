@@ -71,19 +71,20 @@ def run_solo_chat_ui(repo_dir="solo-chat-ui"):
     try:
         # Kill the previous process if running
         print("Checking for running processes...")
-        result = subprocess.run(['pgrep', '-f', 'solo-chat-ui/node_modules/.bin/vite'], check=True)
-        if result.stdout:
+        result = subprocess.run(['pgrep', '-f', 'solo-chat-ui/node_modules/.bin/vite'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+        if result.returncode == 0:
             pids = result.stdout.strip().split('\n')
             for pid in pids:
                 print(f"Killing process with PID {pid}")
-                subprocess.run(['kill', '-9', pid], check=True)
+                subprocess.run(['kill', '-9', pid],stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
 
-        root_path = load_config().get('dir', './')
-        dir_path = os.path.join(root_path, repo_dir)
-        print(f"Running `npm run dev` on {dir_path}...")
-        subprocess.run(['npm', 'run', 'dev'], cwd=dir_path, check=True)
     except subprocess.CalledProcessError as e:
-        print(f"Running `npm run dev` on {dir_path}, error: {e}")
+        print(e)
+
+    root_path = load_config().get('dir', './')
+    dir_path = os.path.join(root_path, repo_dir)
+    print(f"Running `npm run dev` on {dir_path}...")
+    subprocess.run(['npm', 'run', 'dev'], cwd=dir_path, check=True)
 
 def start_docker_daemon():
     import time
