@@ -106,7 +106,7 @@ def run_docker_mongodb(repo_dir="solo-chat-ui"):
     print("Starting MongoDB Docker container...")
     try:
         # Check if the container is already running
-        result = subprocess.run(['docker', 'inspect', '--format', '{{.State.Running}}', 'mongo-chatui'], check=True)
+        result = subprocess.run(['docker', 'inspect', '--format', '{{.State.Running}}', 'mongo-chatui'], capture_output=True, text=True, check=True)
         if result.stdout.strip() == 'true':
             print("MongoDB Docker container is already running.")
         else:
