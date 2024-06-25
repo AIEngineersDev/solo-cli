@@ -132,7 +132,8 @@ def prompt_huggingface_token():
 
     print("Please open the following URL and create a token:")
     print("https://huggingface.co/settings/token")
-    token = input("Enter your Hugging Face token: ")
+    # token = input("Enter your Hugging Face token: ")
+    token = "hf_invalid_token"
     update_config('HF_TOKEN', token)
     print("Hugging Face token saved in configuration.")
 
