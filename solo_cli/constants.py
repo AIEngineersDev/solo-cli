@@ -2,7 +2,7 @@ API_BASE_URL = "https://huggingface.co/Mozilla/Phi-3-mini-4k-instruct-llamafile"
 
 MODELS = {
     "llava-v1.5-7b-q4": "https://huggingface.co/Mozilla/llava-v1.5-7b-llamafile/resolve/main/llava-v1.5-7b-q4.llamafile?download=true",
-    "TinyLlama-1.1B-Chat-v1.0.F16": "https://huggingface.co/somepath/TinyLlama-1.1B-Chat-v1.0.F16.llamafile?download=true",
+    "TinyLlama-1.1B-Chat-v1.0.F16": "https://huggingface.co/Mozilla/TinyLlama-1.1B-Chat-v1.0-llamafile/resolve/main/TinyLlama-1.1B-Chat-v1.0.F16.llamafile?download=true",
     "mistral-7b-instruct-v0.2.Q4_0": "https://huggingface.co/somepath/mistral-7b-instruct-v0.2.Q4_0.llamafile?download=true",
     "Phi-3-mini-4k-instruct.F16": "https://huggingface.co/somepath/Phi-3-mini-4k-instruct.F16.llamafile?download=true",
     "mixtral-8x7b-instruct-v0.1.Q5_K_M": "https://huggingface.co/somepath/mixtral-8x7b-instruct-v0.1.Q5_K_M.llamafile?download=true",
@@ -15,4 +15,4 @@ MODELS = {
     "mxbai-embed-large-v1-f16": "https://huggingface.co/somepath/mxbai-embed-large-v1-f16.llamafile?download=true"
 }
 
-DEFAULT_MODEL = "llava-v1.5-7b-q4"
+DEFAULT_MODEL = "TinyLlama-1.1B-Chat-v1.0.F16"

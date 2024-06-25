@@ -150,6 +150,44 @@ def create_env_file(repo_dir="solo-chat-ui"):
     model_variable = """
 MODELS=`[
     {
+        "name": "Local Mozilla/TinyLlama-1.1B-Chat-v1.0",
+        "displayName": "Mozilla/TinyLlama-1.1B-Chat-v1.0",
+        "description": "The primary intended users of the model are researchers and hobbyists in computer vision, natural language processing, machine learning, and artificial intelligence.",
+        "websiteUrl": "https://github.com/Mozilla-Ocho/llamafile",
+        "preprompt": "",
+      "chatPromptTemplate" : "<s>{{#each messages}}{{#ifUser}}[INST] {{#if @first}}{{#if @root.preprompt}}{{@root.preprompt}}\\n{{/if}}{{/if}}{{content}} [/INST]{{/ifUser}}{{#ifAssistant}}{{content}}</s>{{/ifAssistant}}{{/each}}",
+      "parameters": {
+        "temperature": 0.1,
+        "top_p": 0.95,
+        "repetition_penalty": 1.2,
+        "top_k": 50,
+        "truncate": 3072,
+        "max_new_tokens": 1024,
+        "stop": ["</s>"]
+      },
+      "promptExamples": [
+        {
+          "title": "Write an email from bullet list",
+          "prompt": "As a restaurant owner, write a professional email to the supplier to get these products every week: \\n\\n- Wine (x10)\\n- Eggs (x24)\\n- Bread (x12)"
+        }, {
+          "title": "Code a snake game",
+          "prompt": "Code a basic snake game in python, give explanations for each step."
+        }, {
+          "title": "Assist in a task",
+          "prompt": "How do I make a delicious lemon cheesecake?"
+        }
+      ],
+        "endpoints": [{
+            "type" : "llamacpp",
+            "baseURL": "http://localhost:8080"
+        }],
+    }
+]`
+"""
+
+    model_variable_llava = """
+MODELS=`[
+    {
         "name": "Local liuhaotian/llava-v1.5-7b",
         "displayName": "liuhaotian/llava-v1.5-7b",
         "description": "The primary intended users of the model are researchers and hobbyists in computer vision, natural language processing, machine learning, and artificial intelligence.",
