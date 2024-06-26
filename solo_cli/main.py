@@ -141,3 +141,8 @@ def initapp(dir: str = './'):
 
 if __name__ == "__main__":
     app()
+
+@app.command()
+def ls():
+    for model_name in models:
+        print(model_name)
